@@ -18,11 +18,26 @@ const Endereco = require("./database/endereco");
 
 //Definição de Rotas
 
-//Escuta de eventos (listen)
+app.post("/clientes", async (req,res) =>{
+    //Coletar informações do req.body
+    const {nome,email,telefone,endereco} = req.body;
+    //Chamar o Model e a função create
+    try{
+        //Dentro de "novo" estara o objeto criado
+        const novo = await Cliente.create(
+            {nome,email,telefone,endereco},
+            {include:[Endereco]} //include permite inserir clienre e endereço em um só comando
+            );
+            res.status(201).json(novo);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({message: "Um erro aconteceu."});
+    }
+})
 
 app.listen(3000, () =>{
     //Gerar as tabelas a partir do model
     //Force = apaga tudo e recria as tabelas
-    connection.sync({force:true})
-    console.log("Servidor rodando em http://localhost:3000")
+    connection.sync({force:true});
+    console.log("Servidor rodando em http://localhost:3000");
 })

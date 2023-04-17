@@ -1,7 +1,7 @@
 const {DataTypes} = require("sequelize");
 const {connection} = require("./database");
 
-const Endereco = connection.define("Endereco", {
+const Endereco = connection.define("endereco", {
     uf:{
         type: DataTypes.STRING(2),
         allowNull: false,
