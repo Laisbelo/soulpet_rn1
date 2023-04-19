@@ -130,6 +130,51 @@ app.post("/pets", async (req, res) =>{
     }
 })
 
+app.put("/pets/:id", async (req,res)=>{
+    //Esses são os dados que virão no corpo JSON
+    const  { nome, tipo, dataNasc, porte } = req.body;
+
+    //É necessário checar a existência do PET
+    //SELECT * FROM pets WHERE id = req.params.id;
+    const pet = await Pet.findByPk(req.params.id);
+    //se pet é null => não existe pet com o id
+    try{
+        if(pet){
+            //Indicar qual pet vai ser atualizado
+            //1º argumento -  dados novos
+            //2º argumento - where
+            await Pet.update(
+                {nome, tipo, dataNasc, porte},
+                {where:{id:req.params.id}}); //WHERE is = "req.params.id"
+            res.json({message:"Pet atualizado com sucesso"})
+        } else {
+            res.status(404).json({message:"Pet não encontrado"})
+        }
+    } catch (err) {
+        res.status(500).json({message:"Ocorreu um erro"})
+        console.log(err)
+    }
+    
+});
+
+app.delete("/pets/:id", async (req,res)=>{
+    //Precisamos chegar se existe antes de apagar
+    const pet = await Pet.findByPk(req.params.id);
+
+    try{
+        if(pet){
+            //pet existe, podemos apagar
+            await pet.destroy();
+            res.json({message: "O pet foi removido"})
+        } else {
+            res.status(404).json({message: "O pet não foi encontrado"})
+        }
+    } catch (err) {
+        res.status(500).json({message:"Ocorreu um erro"})
+    }
+    
+});
+
 
 app.listen(3000, () =>{
     //Gerar as tabelas a partir do model
