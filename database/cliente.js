@@ -24,7 +24,8 @@ const Cliente = connection.define("cliente", {
 //Cliente tem um endereço
 //Endereço ganha uma chave estrangeira (nome do model + id)
 //Chave estrangeira = clienteId
-const Endereco = require("./endereco")
-Cliente.hasOne(Endereco); //Cliente tem um endereço
+const Endereco = require("./endereco");
+//CASCADE = apagar o cliente, faz o endcereço associado ser apagado junto
+Cliente.hasOne(Endereco, {onDelete: "CASCADE"}); //Cliente tem um endereço
 Endereco.belongsTo(Cliente); //Endereço pertence a um cliente
 module.exports = Cliente;
